@@ -150,6 +150,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    //converts the diceRolls to string
     private fun listRollsToString(): String {
         var ret: String = ""
         for (i in diceRolls.indices) {
