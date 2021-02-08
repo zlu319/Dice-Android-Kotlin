@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 clearButton.setVisibility(View.INVISIBLE)
                 val resultTextView: TextView = findViewById(R.id.textView)
                 resultTextView.text = ""
-                // DO NOT clear the DB so the results can be viewed by DiceRollReader
+                // DO NOT clear the DB; so the results can be viewed by DiceRollReader
             }
         }
     }
