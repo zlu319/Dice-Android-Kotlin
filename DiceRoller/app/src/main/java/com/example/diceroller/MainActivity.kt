@@ -15,6 +15,9 @@ import android.widget.Toast
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 
 const val RC_SIGN_IN = 123
@@ -27,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     //private lateinit var auth: FirebaseAuth
     private var isLoggedIn: Boolean = false
     private var diceRolls: ArrayList<Int> = ArrayList<Int>()
+    private lateinit var database: DatabaseReference
 
     //only runs once!
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,6 +93,7 @@ class MainActivity : AppCompatActivity() {
                     diceRolls = ArrayList<Int>()
                     val resultTextView: TextView = findViewById(R.id.textView)
                     resultTextView.text = ""
+                    updateDB()
                 }
                 if (isLoggedIn)
                 {
@@ -147,7 +152,11 @@ class MainActivity : AppCompatActivity() {
 
     //updates the Firebase Real-Time Database
     private fun updateDB() {
-
+        database = Firebase.database.reference
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (isLoggedIn && userId != null) {
+            database.child("userrolls").child("users").child(userId).setValue(diceRolls)
+        }
     }
 
     //converts the diceRolls to string
