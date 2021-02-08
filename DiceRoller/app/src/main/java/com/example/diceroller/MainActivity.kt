@@ -150,7 +150,9 @@ class MainActivity : AppCompatActivity() {
         updateDB()
     }
 
-    //updates the Firebase Real-Time Database
+    /**
+     * Updates the Firebase Real-Time Database
+     */
     private fun updateDB() {
         database = Firebase.database.reference
         val userId = FirebaseAuth.getInstance().currentUser?.uid
@@ -159,7 +161,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    //converts the diceRolls to string
+    /**
+     * Converts the diceRolls to string
+     */
     private fun listRollsToString(): String {
         var ret: String = ""
         for (i in diceRolls.indices) {
@@ -174,6 +178,7 @@ class MainActivity : AppCompatActivity() {
  * This class represents a dice
  */
 class Dice(private val numSides: Int) {
+    //roll the dice
     fun roll(): Int {
         return (1..numSides).random()
     }
