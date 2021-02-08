@@ -27,17 +27,18 @@ const val RC_SIGN_IN = 123
  * This activity lets the user roll a dice and display the result on the screen
  */
 class MainActivity : AppCompatActivity() {
-    //private lateinit var auth: FirebaseAuth
     private var isLoggedIn: Boolean = false
     private var diceRolls: ArrayList<Int> = ArrayList<Int>()
     private lateinit var database: DatabaseReference
+    private val dice = Dice(6) // create a new 6-sided dice
 
-    //only runs once!
+    // only runs once
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         val rollButton: Button = findViewById(R.id.roll_button)
-        //R.id.button is the resource ID for the Button, which is a unique identifier for it.
+        // R.id.button is the resource ID for the Button, which is a unique identifier for it.
         // Android automatically assigns ID numbers to the resources in your app.
         // Resource IDs are of the form R.<type>.<name>; for example, R.string.roll.
         // For View IDs, the <type> is id, for example, R.id.button
@@ -47,9 +48,16 @@ class MainActivity : AppCompatActivity() {
             rollDice()
         }
 
-        val authProviders = arrayListOf(
-                AuthUI.IdpConfig.EmailBuilder().build()
-        )
+        val clearButton: Button = findViewById(R.id.clear_button)
+        clearButton.setOnClickListener {
+            diceRolls = ArrayList<Int>()
+            val resultTextView: TextView = findViewById(R.id.textView)
+            resultTextView.text = ""
+            updateDB()
+        }
+        clearButton.setVisibility(View.INVISIBLE)
+
+        val authProviders = arrayListOf(AuthUI.IdpConfig.EmailBuilder().build())
 
         val loginButton: Button = findViewById(R.id.login_button)
 
@@ -67,16 +75,15 @@ class MainActivity : AppCompatActivity() {
             } else {
                 loginButton.setText(R.string.login_to_save_history)
                 isLoggedIn = false
-                val clearButton: Button = findViewById(R.id.clear_button)
                 clearButton.setVisibility(View.INVISIBLE)
                 val resultTextView: TextView = findViewById(R.id.textView)
                 resultTextView.text = ""
-                //DO NOT Update the DB or you won't be able to see the results in Daniel's Viewer.
+                // DO NOT clear the DB so the results can be viewed by DiceRollReader
             }
         }
     }
 
-    //is called when the firebase auth ui (which is another activity) gives the result
+    // Called when the firebase auth ui (which is another activity) gives the result
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -94,17 +101,9 @@ class MainActivity : AppCompatActivity() {
                 loginButton.setText(R.string.logout)
 
                 val clearButton: Button = findViewById(R.id.clear_button)
-                clearButton.setOnClickListener {
-                    diceRolls = ArrayList<Int>()
-                    val resultTextView: TextView = findViewById(R.id.textView)
-                    resultTextView.text = ""
-                    updateDB()
+                if (isLoggedIn) {
+                    clearButton.setVisibility(View.VISIBLE); // SHOW the clear button
                 }
-                if (isLoggedIn)
-                {
-                    clearButton.setVisibility(View.VISIBLE); //SHOW the button
-                }
-                //startActivity(Intent(this, MainActivity::class.java))
             } else {
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
@@ -119,11 +118,9 @@ class MainActivity : AppCompatActivity() {
      * Roll the Dice and Update the screen with the result
      */
     private fun rollDice() {
-        //create a new 6-sided dice
-        val dice = Dice(6)
         val diceRoll = dice.roll()
         diceRolls.add(diceRoll)
-        //Update the screen with the text of the dice roll
+        // Update the screen with the text of the dice roll
         val resultTextView: TextView = findViewById(R.id.textView)
         if (!isLoggedIn) {
             resultTextView.text = diceRoll.toString()
@@ -132,16 +129,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         val diceImage: ImageView = findViewById(R.id.imageView)
-        /*
-        when (diceRoll) {
-            1 -> diceImage.setImageResource(R.drawable.dice_1)
-            2 -> diceImage.setImageResource(R.drawable.dice_2)
-            3 -> diceImage.setImageResource(R.drawable.dice_3)
-            4 -> diceImage.setImageResource(R.drawable.dice_4)
-            5 -> diceImage.setImageResource(R.drawable.dice_5)
-            6 -> diceImage.setImageResource(R.drawable.dice_6)
-        }
-        */
         val drawableResource = when (diceRoll) {
             1 -> R.drawable.dice_1
             2 -> R.drawable.dice_2
