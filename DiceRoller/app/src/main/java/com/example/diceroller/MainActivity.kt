@@ -7,6 +7,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -25,7 +26,7 @@ const val RC_SIGN_IN = 123
 class MainActivity : AppCompatActivity() {
     //private lateinit var auth: FirebaseAuth
     private var isLoggedIn: Boolean = false
-    private var DiceRolls: ArrayList<Int> = ArrayList<Int>()
+    private var diceRolls: ArrayList<Int> = ArrayList<Int>()
 
     //only runs once!
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,6 +84,16 @@ class MainActivity : AppCompatActivity() {
                 val loginButton: Button = findViewById(R.id.login_button)
                 loginButton.setText(R.string.logout)
 
+                val clearButton: Button = findViewById(R.id.clear_button)
+                clearButton.setOnClickListener {
+                    diceRolls = ArrayList<Int>()
+                    val resultTextView: TextView = findViewById(R.id.textView)
+                    resultTextView.text = ""
+                }
+                if (isLoggedIn)
+                {
+                    clearButton.setVisibility(View.VISIBLE); //SHOW the button
+                }
                 //startActivity(Intent(this, MainActivity::class.java))
             } else {
                 // Sign in failed. If response is null the user canceled the
@@ -101,10 +112,14 @@ class MainActivity : AppCompatActivity() {
         //create a new 6-sided dice
         val dice = Dice(6)
         val diceRoll = dice.roll()
-
+        diceRolls.add(diceRoll)
         //Update the screen with the text of the dice roll
         val resultTextView: TextView = findViewById(R.id.textView)
-        resultTextView.text = diceRoll.toString()
+        if (!isLoggedIn) {
+            resultTextView.text = diceRoll.toString()
+        } else {
+            resultTextView.text = listRollsToString()
+        }
 
         val diceImage: ImageView = findViewById(R.id.imageView)
         /*
@@ -135,6 +150,13 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun listRollsToString(): String {
+        var ret: String = ""
+        for (i in diceRolls.indices) {
+            ret += diceRolls[i].toString() + " "
+        }
+        return ret
+    }
 
 }
 
