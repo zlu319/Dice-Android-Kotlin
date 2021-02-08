@@ -67,6 +67,11 @@ class MainActivity : AppCompatActivity() {
             } else {
                 loginButton.setText(R.string.login_to_save_history)
                 isLoggedIn = false
+                val clearButton: Button = findViewById(R.id.clear_button)
+                clearButton.setVisibility(View.INVISIBLE)
+                val resultTextView: TextView = findViewById(R.id.textView)
+                resultTextView.text = ""
+                //DO NOT Update the DB or you won't be able to see the results in Daniel's Viewer.
             }
         }
     }
