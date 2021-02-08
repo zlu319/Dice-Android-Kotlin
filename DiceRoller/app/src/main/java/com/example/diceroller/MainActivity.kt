@@ -6,6 +6,7 @@ package com.example.diceroller
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
@@ -17,9 +18,12 @@ class MainActivity : AppCompatActivity() {
         // Android automatically assigns ID numbers to the resources in your app.
         // Resource IDs are of the form R.<type>.<name>; for example, R.string.roll.
         // For View IDs, the <type> is id, for example, R.id.button
-        rollButton.setOnClickListener({
+        rollButton.setOnClickListener {
             val toast = Toast.makeText(this, "Dice Rolled!", Toast.LENGTH_SHORT)
             toast.show()
-        })
+            val resultTextView: TextView = findViewById(R.id.textView)
+            resultTextView.text = "6"
+            
+        }
     }
 }
