@@ -1,5 +1,6 @@
 # Dice-Android-Kotlin
 
+This repository has been moved to GitLab: [https://gitlab.com/zlu319/Dice-Android-Kotlin](https://gitlab.com/zlu319/Dice-Android-Kotlin)
 ## Description
 
 The program is an interactive Dice Roller App that support Login Functionality to sync dice rolls to an external Firebase Real-Time Database.
